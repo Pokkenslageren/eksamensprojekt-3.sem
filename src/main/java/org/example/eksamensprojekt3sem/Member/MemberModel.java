@@ -26,9 +26,9 @@ public class MemberModel {
     @NotBlank(message = "Telefonnummer mangler")
     private String phone;
 
-    @Column(name = "adress")
+    @Column(name = "address")
     @NotBlank(message = "Adresse mangler")
-    private String adress;
+    private String address;
 
     @Column(name = "date_of_birth")
     @NotBlank(message = "Dato mangler")
@@ -69,12 +69,12 @@ public class MemberModel {
         this.phone = phone;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Date getDateOfBirth() {
