@@ -25,6 +25,7 @@ public class Membership {
 
     @Column(name = "membership_type")
     @NotNull(message = "Medlemskabstype skal udfyldes")
+    @Enumerated(EnumType.STRING)
     private MembershipType membershipType;
 
     @Column(name = "start_date")
