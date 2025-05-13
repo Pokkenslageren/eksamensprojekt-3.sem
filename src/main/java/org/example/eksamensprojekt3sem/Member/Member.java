@@ -17,27 +17,27 @@ public class Member {
     private long memberId;
 
     @Column(name = "name")
-    @NotBlank(message = "Navn mangler")
+    @NotBlank(message = "Navn skal udfyldes")
     private String name;
 
     @Column(name = "email")
-    @NotBlank(message = "Email mangler")
+    @NotBlank(message = "Email skal udfyldes")
     private String email;
 
     @Column(name = "phone")
-    @NotBlank(message = "Telefonnummer mangler")
+    @NotBlank(message = "Telefonnummer skal udfyldes")
     private String phone;
 
     @Column(name = "address")
-    @NotBlank(message = "Adresse mangler")
+    @NotBlank(message = "Adresse skal udfyldes")
     private String address;
 
     @Column(name = "date_of_birth")
-    @NotBlank(message = "Dato mangler")
+    @NotBlank(message = "Dato skal udfyldes")
     private Date dateOfBirth;
 
     @Column(name = "payment_status")
-    @NotNull(message = "Betalingstatus mangler")
+    @NotNull(message = "Betalingstatus skal udfyldes")
     private PaymentStatus paymentStatus;
 
     protected Member() {

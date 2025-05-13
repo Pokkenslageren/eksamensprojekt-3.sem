@@ -15,16 +15,16 @@ public class User {
     private long userId;
 
     @Column(name = "username")
-    @NotBlank(message = "Navn mangler")
+    @NotBlank(message = "Navn skal udfyldes")
     private String username;
 
     @Column(name = "password")
-    @NotBlank(message = "Kodeord mangler")
+    @NotBlank(message = "Kodeord skal udfyldes")
     private String password;
 
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "Rolle mangler")
+    @NotNull(message = "Rolle skal udfyldes")
     private UserRole userRole;
 
     protected User() {

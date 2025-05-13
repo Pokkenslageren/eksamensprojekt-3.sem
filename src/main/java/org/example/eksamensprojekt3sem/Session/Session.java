@@ -20,17 +20,17 @@ public class Session {
     private Long sessionId;
 
     @JsonBackReference
-    @NotNull(message = "Team must be specified")
+    @NotNull(message = "Team skal udfyldes")
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @NotNull(message = "Session date and time must be specified")
-    @Future(message = "Session date and time must be in the future")
+    @NotNull(message = "Sessionsdato skal udfyldes")
+    @Future(message = "Sessionsdato skal være i fremtiden")
     @Column(name = "date_time")
     private LocalDateTime dateTime;
 
-    @NotBlank(message = "Location cannot be blank")
+    @NotBlank(message = "Lokation skal udfyldes")
     @Column(name = "location")
     private String location;
 

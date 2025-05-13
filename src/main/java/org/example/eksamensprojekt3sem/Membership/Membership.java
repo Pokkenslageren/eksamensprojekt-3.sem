@@ -20,18 +20,19 @@ public class Membership {
     private Long membershipId;
 
     @JoinColumn (name = "member_id")
+    @NotBlank(message = "Medlems-ID skal udfyldes")
     private Long memberId;
 
     @Column(name = "membership_type")
-    @NotNull(message = "Mangler medlemskabstype")
+    @NotNull(message = "Medlemskabstype skal udfyldes")
     private MembershipType membershipType;
 
     @Column(name = "start_date")
-    @NotBlank(message = "Mangler startdato")
+    @NotNull(message = "Startdato skal udfyldes")
     private LocalDate startDate;
 
     @Column(name = "end_date")
-    @NotBlank(message = "Mangler slutdato")
+    @NotNull(message = "Slutdato skal udfyldes")
     private LocalDate endDate;
 
 

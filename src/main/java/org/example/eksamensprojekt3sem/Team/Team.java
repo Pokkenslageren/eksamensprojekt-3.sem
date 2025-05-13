@@ -13,15 +13,15 @@ public class Team {
     private long teamId;
 
     @Column(name = "name")
-    @NotBlank(message = "Navn mangler")
+    @NotBlank(message = "Navn skal udfyldes")
     private String name;
 
     @Column(name = "description")
-    @NotBlank(message = "Beskrivelse mangler")
+    @NotBlank(message = "Beskrivelse skal udfyldes")
     private String description;
 
     @Column(name = "active")
-    @NotBlank(message = "Aktivitet mangler")
+    @NotBlank(message = "Aktivitetsstatus skal udfyldes")
     private boolean active;
 
     protected Team() {

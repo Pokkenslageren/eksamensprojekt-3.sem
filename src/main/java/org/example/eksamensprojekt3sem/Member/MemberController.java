@@ -34,7 +34,7 @@ public class MemberController {
     }
 
     @PutMapping("/members/update/{id}")
-    public ResponseEntity<Member> updateMember(@PathVariable long id, @RequestBody Member memberDetails) {
+    public ResponseEntity<Member> updateMember(@PathVariable long id, @Valid @RequestBody Member memberDetails) {
         return memberService.updateMember(id, memberDetails)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
