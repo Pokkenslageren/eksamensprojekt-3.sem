@@ -1,5 +1,7 @@
 package org.example.eksamensprojekt3sem.Exercise;
 
+import org.example.eksamensprojekt3sem.SessionExercise.SessionExercise;
+import org.example.eksamensprojekt3sem.SessionExercise.SessionExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

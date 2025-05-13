@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.example.eksamensprojekt3sem.Session.Session;
+import org.example.eksamensprojekt3sem.Exercise.Exercise;
 
 @Entity
 @Table(name = "session_exercise")

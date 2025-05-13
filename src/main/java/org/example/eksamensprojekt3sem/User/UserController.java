@@ -1,7 +1,6 @@
 package org.example.eksamensprojekt3sem.User;
 
 import jakarta.validation.Valid;
-import org.example.eksamensprojekt3sem.Member.MemberModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,26 +22,26 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserModel> getUserById(@PathVariable long id) {
+    public ResponseEntity<User> getUserById(@PathVariable long id) {
         return userService.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/users/add")
-    public UserModel createUser(@Valid @RequestBody UserModel user) {
+    public User createUser(@Valid @RequestBody User user) {
         return userService.addUser(user);
     }
 
     @PutMapping("/users/update/{id}")
-    public ResponseEntity<UserModel> updateUser(@PathVariable long id, @RequestBody UserModel userDetails) {
+    public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User userDetails) {
         return userService.updateUser(id, userDetails)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/users/delete/{id}")
-    public ResponseEntity<UserModel> deleteUser(@PathVariable long id) {
+    public ResponseEntity<User> deleteUser(@PathVariable long id) {
         if (userService.deleteUser(id)) {
             return ResponseEntity.noContent().build();
         } else {

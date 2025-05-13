@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import org.example.eksamensprojekt3sem.SessionExercise.SessionExercise;
+
 import java.util.*;
 
 @Entity
