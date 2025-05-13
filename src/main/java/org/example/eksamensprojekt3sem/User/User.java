@@ -3,10 +3,11 @@ package org.example.eksamensprojekt3sem.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.example.eksamensprojekt3sem.Enums.UserRole;
 
 @Entity
 @Table(name = "users")
-public class UserModel {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +27,14 @@ public class UserModel {
     @NotNull(message = "Rolle mangler")
     private UserRole userRole;
 
-    public UserModel() {
+    protected User() {
+    }
+
+    public User(long userId, String username, String password, UserRole userRole) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.userRole = userRole;
     }
 
     public long getUserId() {

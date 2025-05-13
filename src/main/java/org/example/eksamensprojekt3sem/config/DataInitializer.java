@@ -1,10 +1,17 @@
 package org.example.eksamensprojekt3sem.config;
 
 import jakarta.annotation.PostConstruct;
-import org.example.eksamensprojekt3sem.entity.*;
-import org.example.eksamensprojekt3sem.entity.Membership.MembershipType;
-import org.example.eksamensprojekt3sem.entity.Payment.PaymentStatus;
-import org.example.eksamensprojekt3sem.entity.User.UserRole;
+import org.apache.catalina.Session;
+import org.apache.catalina.User;
+import org.example.eksamensprojekt3sem.*;
+import org.example.eksamensprojekt3sem.Enums.MembershipType;
+import org.example.eksamensprojekt3sem.Enums.PaymentStatus;
+import org.example.eksamensprojekt3sem.Enums.UserRole;
+import org.example.eksamensprojekt3sem.Exercise.Exercise;
+import org.example.eksamensprojekt3sem.Membership.Membership;
+import org.example.eksamensprojekt3sem.SessionExercise.SessionExercise;
+import org.example.eksamensprojekt3sem.Team.Team;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -13,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.lang.reflect.Member;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +30,7 @@ import java.util.List;
 @Component
 @Profile("dev")
 public class DataInitializer {
+    /*
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -36,7 +45,8 @@ public class DataInitializer {
     @Transactional
     public void initData() {
         // Create users (admin, chairman, trainers)
-        User admin = new User("admin", passwordEncoder.encode("admin123"), UserRole.ADMIN);
+        /*
+        User admin = new User(101L, "admin", passwordEncoder.encode("admin123"), UserRole.ADMIN);
         User chairman = new User("chairman", passwordEncoder.encode("chairman123"), UserRole.CHAIRMAN);
         User trainer1 = new User("trainer1", passwordEncoder.encode("trainer123"), UserRole.TRAINER);
         User trainer2 = new User("trainer2", passwordEncoder.encode("trainer123"), UserRole.TRAINER);
@@ -47,8 +57,8 @@ public class DataInitializer {
         entityManager.persist(trainer2);
 
         // Create teams
-        Team seniorTeam = new Team("Senior hold", "Seniorhold for spillere over 18 år", true);
-        Team youthTeam = new Team("Ungdomshold", "Ungdomshold for spillere under 18 år", true);
+        Team seniorTeam = new Team( 111L, "Senior hold", "Seniorhold for spillere over 18 år", true);
+        Team youthTeam = new Team(222L, "Ungdomshold", "Ungdomshold for spillere under 18 år", true);
 
         entityManager.persist(seniorTeam);
         entityManager.persist(youthTeam);
@@ -85,22 +95,22 @@ public class DataInitializer {
         entityManager.persist(member6);
 
         // Create memberships
-        Membership membership1 = new Membership(member1, MembershipType.SENIOR, LocalDate.of(2023, 1, 1));
+        Membership membership1 = new Membership(1L, MembershipType.SENIOR, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31), List.of());
         membership1.setEndDate(LocalDate.of(2023, 12, 31));
 
-        Membership membership2 = new Membership(member2, MembershipType.YOUTH, LocalDate.of(2022, 8, 1));
+        Membership membership2 = new Membership(2L, MembershipType.JUNIOR, LocalDate.of(2022, 8, 1), LocalDate.of(2023, 7, 31), List.of());
         membership2.setEndDate(LocalDate.of(2023, 7, 31));
 
-        Membership membership3 = new Membership(member3, MembershipType.SENIOR, LocalDate.of(2021, 1, 1));
+        Membership membership3 = new Membership(3L, MembershipType.SENIOR, LocalDate.of(2021, 1, 1), LocalDate.of(2023, 12, 31), List.of());
         membership3.setEndDate(LocalDate.of(2023, 12, 31));
 
-        Membership membership4 = new Membership(member4, MembershipType.YOUTH, LocalDate.of(2023, 1, 1));
+        Membership membership4 = new Membership(4L, MembershipType.JUNIOR, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31), List.of());
         membership4.setEndDate(LocalDate.of(2023, 12, 31));
 
-        Membership membership5 = new Membership(member5, MembershipType.SENIOR, LocalDate.of(2022, 1, 1));
+        Membership membership5 = new Membership(5L, MembershipType.SENIOR, LocalDate.of(2022, 1, 1), LocalDate.of(2023, 12, 31), List.of());
         membership5.setEndDate(LocalDate.of(2022, 12, 31));
 
-        Membership membership6 = new Membership(member6, MembershipType.PASSIVE, LocalDate.of(2023, 1, 1));
+        Membership membership6 = new Membership(6L, MembershipType.PASSIVE, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31), List.of());
         membership6.setEndDate(LocalDate.of(2023, 12, 31));
 
         entityManager.persist(membership1);
@@ -109,21 +119,6 @@ public class DataInitializer {
         entityManager.persist(membership4);
         entityManager.persist(membership5);
         entityManager.persist(membership6);
-
-        // Create payments
-        Payment payment1 = new Payment(membership1, new BigDecimal("1200.00"), LocalDate.of(2023, 1, 15), PaymentStatus.PAID);
-        Payment payment2 = new Payment(membership2, new BigDecimal("800.00"), LocalDate.of(2022, 8, 5), PaymentStatus.UNPAID);
-        Payment payment3 = new Payment(membership3, new BigDecimal("1200.00"), LocalDate.of(2023, 1, 20), PaymentStatus.PARTIAL);
-        Payment payment4 = new Payment(membership4, new BigDecimal("800.00"), LocalDate.of(2023, 1, 10), PaymentStatus.PAID);
-        Payment payment5 = new Payment(membership5, new BigDecimal("1200.00"), LocalDate.of(2022, 1, 5), PaymentStatus.PAID);
-        Payment payment6 = new Payment(membership6, new BigDecimal("400.00"), LocalDate.of(2023, 1, 20), PaymentStatus.PAID);
-
-        entityManager.persist(payment1);
-        entityManager.persist(payment2);
-        entityManager.persist(payment3);
-        entityManager.persist(payment4);
-        entityManager.persist(payment5);
-        entityManager.persist(payment6);
 
         // Create exercises
         Exercise exercise1 = new Exercise("Warmup", "Grundig opvarmning med fokus på bevægelighed", 10);
@@ -188,5 +183,7 @@ public class DataInitializer {
         entityManager.persist(se7);
         entityManager.persist(se8);
         entityManager.persist(se9);
+
     }
+      */
 }

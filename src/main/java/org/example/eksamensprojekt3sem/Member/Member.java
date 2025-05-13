@@ -2,12 +2,14 @@ package org.example.eksamensprojekt3sem.Member;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.example.eksamensprojekt3sem.Enums.PaymentStatus;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "members")
-public class MemberModel {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +36,21 @@ public class MemberModel {
     @NotBlank(message = "Dato mangler")
     private Date dateOfBirth;
 
-    public MemberModel() {
+    @Column(name = "payment_status")
+    @NotNull(message = "Betalingstatus mangler")
+    private PaymentStatus paymentStatus;
+
+    protected Member() {
+    }
+
+    public Member(String name, long memberId, String email, String phone, String address, Date dateOfBirth, PaymentStatus paymentStatus) {
+        this.name = name;
+        this.memberId = memberId;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.paymentStatus = paymentStatus;
     }
 
     public long getMemberId() {
@@ -83,5 +99,13 @@ public class MemberModel {
 
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

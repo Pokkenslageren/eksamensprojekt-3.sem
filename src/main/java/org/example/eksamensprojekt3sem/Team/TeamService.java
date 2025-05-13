@@ -1,12 +1,9 @@
 package org.example.eksamensprojekt3sem.Team;
 
 import jakarta.validation.Valid;
-import org.example.eksamensprojekt3sem.Member.MemberModel;
+import org.example.eksamensprojekt3sem.Member.Member;
 import org.example.eksamensprojekt3sem.Member.MemberRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,19 +19,19 @@ public class TeamService {
         this.memberRepository = memberRepository;
     }
 
-    public List<TeamModel> getAllTeams() {
+    public List<Team> getAllTeams() {
         return teamRepository.findAll();
     }
 
-    public List<MemberModel> getMembers(){
+    public List<Member> getMembers(){
         return memberRepository.findAll();
     }
 
-    public MemberModel addMember(MemberModel member){
+    public Member addMember(Member member){
         return memberRepository.save(member);
     }
 
-    public Optional<TeamModel> updateTeam(long id, @Valid TeamModel teamDetails) {
+    public Optional<Team> updateTeam(long id, @Valid Team teamDetails) {
         if (id <= 0){
             throw new IllegalArgumentException("ID must be greater than 0");
         }

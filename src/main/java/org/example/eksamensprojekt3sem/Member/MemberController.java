@@ -22,26 +22,26 @@ public class MemberController {
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<MemberModel> getMemberById(@PathVariable long id) {
+    public ResponseEntity<Member> getMemberById(@PathVariable long id) {
         return memberService.getMemberById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/members/add")
-    public MemberModel createMember(@Valid @RequestBody MemberModel member) {
+    public Member createMember(@Valid @RequestBody Member member) {
         return memberService.addMember(member);
     }
 
     @PutMapping("/members/update/{id}")
-    public ResponseEntity<MemberModel> updateMember(@PathVariable long id, @RequestBody MemberModel memberDetails) {
+    public ResponseEntity<Member> updateMember(@PathVariable long id, @RequestBody Member memberDetails) {
         return memberService.updateMember(id, memberDetails)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/members/delete/{id}")
-    public ResponseEntity<MemberModel> deleteMember(@PathVariable long id) {
+    public ResponseEntity<Member> deleteMember(@PathVariable long id) {
         if (memberService.deleteMember(id)) {
             return ResponseEntity.noContent().build();
         } else {

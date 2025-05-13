@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.validation.constraints.*;
+import org.example.eksamensprojekt3sem.SessionExercise.SessionExercise;
+import org.example.eksamensprojekt3sem.Team.*;
 
 import java.time.LocalDateTime;
 import java.util.List;

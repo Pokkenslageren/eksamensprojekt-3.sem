@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "teams")
-public class TeamModel {
+public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,14 @@ public class TeamModel {
     @NotBlank(message = "Aktivitet mangler")
     private boolean active;
 
-    public TeamModel() {
+    protected Team() {
+    }
+
+    public Team(long teamId, String name, String description, boolean active) {
+        this.teamId = teamId;
+        this.name = name;
+        this.description = description;
+        this.active = active;
     }
 
     public long getTeamId() {

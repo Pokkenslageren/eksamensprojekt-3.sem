@@ -1,13 +1,12 @@
 package org.example.eksamensprojekt3sem.Team;
 
 import jakarta.validation.Valid;
-import org.example.eksamensprojekt3sem.Member.MemberModel;
+import org.example.eksamensprojekt3sem.Member.Member;
 import org.example.eksamensprojekt3sem.Member.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("")
@@ -24,24 +23,24 @@ public class TeamController {
     }
 
     @GetMapping("/teams")
-    public List<TeamModel> getAllTeams() {
+    public List<Team> getAllTeams() {
         return teamService.getAllTeams();
     }
 
     @PostMapping("/teams/add")
-    public MemberModel addMemberToTeam(@Valid @RequestBody MemberModel member) {
+    public Member addMemberToTeam(@Valid @RequestBody Member member) {
         return teamService.addMember(member);
     }
 
     @PutMapping("/teams/update")
-    public ResponseEntity<TeamModel> updateTeam(@PathVariable long id, @Valid @RequestBody TeamModel teamDetails) {
+    public ResponseEntity<Team> updateTeam(@PathVariable long id, @Valid @RequestBody Team teamDetails) {
         return teamService.updateTeam(id, teamDetails)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/teams/delete/{id}")
-    public ResponseEntity<TeamModel> deleteTeam(@PathVariable long id) {
+    public ResponseEntity<Team> deleteTeam(@PathVariable long id) {
         if (teamService.deleteTeam(id)) {
             return ResponseEntity.noContent().build();
         } else {

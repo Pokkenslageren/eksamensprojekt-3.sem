@@ -15,22 +15,22 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public List<MemberModel> getAllMembers() {
+    public List<Member> getAllMembers() {
         return memberRepository.findAll();
     }
 
-    public Optional<MemberModel> getMemberById(long id) {
+    public Optional<Member> getMemberById(long id) {
         if(id <= 0){
             throw new IllegalArgumentException("ID must be greater than 0");
         }
         return memberRepository.findById(id);
     }
 
-    public MemberModel addMember(MemberModel member) {
+    public Member addMember(Member member) {
         return memberRepository.save(member);
     }
 
-    public Optional<MemberModel> updateMember(long id, @Valid MemberModel memberDetails) {
+    public Optional<Member> updateMember(long id, @Valid Member memberDetails) {
         if (id <= 0){
             throw new IllegalArgumentException("ID must be greater than 0");
         }

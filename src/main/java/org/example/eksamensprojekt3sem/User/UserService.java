@@ -1,7 +1,6 @@
 package org.example.eksamensprojekt3sem.User;
 
 import jakarta.validation.Valid;
-import org.example.eksamensprojekt3sem.Member.MemberModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,22 +15,22 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<UserModel> getAllUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<UserModel> getUserById(long id) {
+    public Optional<User> getUserById(long id) {
         if(id <= 0){
             throw new IllegalArgumentException("ID must be greater than 0");
         }
         return userRepository.findById(id);
     }
 
-    public UserModel addUser(UserModel user) {
+    public User addUser(User user) {
         return userRepository.save(user);
     }
 
-    public Optional<UserModel> updateUser(long id, @Valid UserModel userDetails) {
+    public Optional<User> updateUser(long id, @Valid User userDetails) {
         if (id <= 0){
             throw new IllegalArgumentException("ID must be greater than 0");
         }

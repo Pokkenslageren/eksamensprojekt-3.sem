@@ -2,6 +2,8 @@ package org.example.eksamensprojekt3sem.Exercise;
 
  // import org.example.eksamensprojekt3sem.entity.SessionExercise;
 
+import org.example.eksamensprojekt3sem.SessionExercise.SessionExercise;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/exercises")
+@RequestMapping("/fodboldklub/exercises")
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
 
+    @Autowired
     public ExerciseController(ExerciseService exerciseService) {
         this.exerciseService = exerciseService;
     }
