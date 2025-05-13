@@ -1,5 +1,6 @@
 package org.example.eksamensprojekt3sem.Membership;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +23,12 @@ public class MembershipController {
     }
 
     @PostMapping
-    public Membership createMembership(@RequestBody Membership membership) {
+    public Membership createMembership(@Valid @RequestBody Membership membership) {
         return membershipService.createMembership(membership);
     }
 
     @PutMapping("/{id}")
-    public Membership updateMembership(@PathVariable Long id, @RequestBody Membership membership) {
+    public Membership updateMembership(@PathVariable Long id, @Valid @RequestBody Membership membership) {
         return membershipService.updateMembership(id, membership.getStartDate(), membership.getEndDate(), membership);
     }
 

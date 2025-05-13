@@ -3,6 +3,7 @@ package org.example.eksamensprojekt3sem.SessionExercise;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.example.eksamensprojekt3sem.Session.Session;
 import org.example.eksamensprojekt3sem.Exercise.Exercise;
@@ -15,25 +16,26 @@ public class SessionExercise {
     private SessionExerciseId id = new SessionExerciseId();
 
     @JsonBackReference
-    @NotNull(message = "Session must not be null")
+    @NotNull(message = "Session skal udfyldes")
     @ManyToOne
     @MapsId("sessionId")
     @JoinColumn(name = "session_id")
     private Session session;
 
     @JsonBackReference
-    @NotNull(message = "Exercise must not be null")
+    @NotNull(message = "Øvelse skal udfyldes")
     @ManyToOne
     @MapsId("exerciseId")
     @JoinColumn(name = "exercise_id")
     private Exercise exercise;
 
-    @NotNull(message = "Order number must be specified")
+    @NotNull(message = "Rækkefølge skal udfyldes")
     @Min(value = 1, message = "Order number must be at least 1")
     @Column(name = "order_num")
     private Integer orderNum;
 
     @Column(name = "notes")
+    @NotBlank(message = "Noter skal udfyldes")
     private String notes;
 
     protected SessionExercise() {}
