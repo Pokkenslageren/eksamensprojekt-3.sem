@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import org.example.eksamensprojekt3sem.SessionExercise.SessionExercise;
+
 import java.util.*;
 
 @Entity
@@ -15,15 +17,17 @@ public class Exercise {
     @Column(name = "exercise_id")
     private Long exerciseId;
 
-    @NotBlank
-    @Column(name = "name", nullable = false)
+    @NotBlank(message = "Navn skal udfyldes")
+    @Column(name = "name")
     private String name;
 
     @Column(name = "description", length = 1000)
+    @NotBlank(message = "Beskrivelse skal udfyldes")
     private String description;
 
     @Column(name = "duration")
     @PositiveOrZero
+    @NotBlank(message = "Varighed skal udfyldes")
     private int duration;
 
     @OneToMany(mappedBy = "exercise")
