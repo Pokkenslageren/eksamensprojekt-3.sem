@@ -16,31 +16,31 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/members")
+    @GetMapping("/api/members")
     public List getAllMembers() {
         return memberService.getAllMembers();
     }
 
-    @GetMapping("/members/{id}")
+    @GetMapping("/api/members/{id}")
     public ResponseEntity<Member> getMemberById(@PathVariable long id) {
         return memberService.getMemberById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/members/add")
+    @PostMapping("/api/members/add")
     public Member createMember(@Valid @RequestBody Member member) {
         return memberService.addMember(member);
     }
 
-    @PutMapping("/members/update/{id}")
+    @PutMapping("/api/members/update/{id}")
     public ResponseEntity<Member> updateMember(@PathVariable long id, @Valid @RequestBody Member memberDetails) {
         return memberService.updateMember(id, memberDetails)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/members/delete/{id}")
+    @DeleteMapping("/api/members/delete/{id}")
     public ResponseEntity<Member> deleteMember(@PathVariable long id) {
         if (memberService.deleteMember(id)) {
             return ResponseEntity.noContent().build();

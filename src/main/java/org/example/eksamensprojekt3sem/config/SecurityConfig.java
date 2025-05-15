@@ -15,11 +15,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/h2-console/**").permitAll() // Allow H2 console
+                        .requestMatchers("/h2-console/**", "/api/**").permitAll() // Allow H2 console and API
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**") // Disable CSRF for H2 console
+                        .ignoringRequestMatchers("/h2-console/**", "/api/**") // Disable CSRF for H2 console and API
                 )
                 .headers(headers -> headers
                         .frameOptions().sameOrigin() // Allow frames for H2 console
