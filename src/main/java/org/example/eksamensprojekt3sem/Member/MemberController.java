@@ -1,6 +1,7 @@
 package org.example.eksamensprojekt3sem.Member;
 
 import jakarta.validation.Valid;
+import org.example.eksamensprojekt3sem.Enums.PaymentStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,4 +49,17 @@ public class MemberController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/members/{id}/payment-status")
+    public ResponseEntity<Member> updatePaymentStatus(@PathVariable long id, @RequestBody String status) {
+        try {
+            PaymentStatus paymentStatus = PaymentStatus.valueOf(status);
+            return memberService.setPaymentStatus(id, paymentStatus)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }

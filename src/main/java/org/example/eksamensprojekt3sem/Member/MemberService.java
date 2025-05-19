@@ -1,6 +1,7 @@
 package org.example.eksamensprojekt3sem.Member;
 
 import jakarta.validation.Valid;
+import org.example.eksamensprojekt3sem.Enums.PaymentStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,4 +61,14 @@ public class MemberService {
         return membershipRepository.findAll();
     }
     */
+
+    public Optional<Member> setPaymentStatus(long id, PaymentStatus paymentStatus) {
+        if(id <= 0){
+            throw new IllegalArgumentException("ID must be greater than 0");
+        }
+        return memberRepository.findById(id).map(member ->{
+            member.setPaymentStatus(paymentStatus);
+            return memberRepository.save(member);
+        });
+    }
 }
