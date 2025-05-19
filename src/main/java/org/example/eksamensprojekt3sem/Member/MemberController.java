@@ -51,9 +51,12 @@ public class MemberController {
     }
 
     @PutMapping("/members/{id}/payment-status")
-    public ResponseEntity<Member> updatePaymentStatus(@PathVariable long id, @RequestBody String status) {
+    public ResponseEntity<Member> updatePaymentStatus(
+            @PathVariable long id,
+            @RequestBody PaymentStatusDTO request
+    ) {
         try {
-            PaymentStatus paymentStatus = PaymentStatus.valueOf(status);
+            PaymentStatus paymentStatus = PaymentStatus.valueOf(request.getStatus());
             return memberService.setPaymentStatus(id, paymentStatus)
                     .map(ResponseEntity::ok)
                     .orElse(ResponseEntity.notFound().build());
