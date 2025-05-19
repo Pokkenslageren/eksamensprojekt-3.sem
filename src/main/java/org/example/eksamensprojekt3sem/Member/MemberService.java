@@ -1,6 +1,7 @@
 package org.example.eksamensprojekt3sem.Member;
 
 import jakarta.validation.Valid;
+import org.example.eksamensprojekt3sem.Enums.PaymentStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,7 +63,7 @@ public class MemberService {
         return memberRepository.findByEmailContainingIgnoreCase(email);
     }
 
-    public List<Member> findByPaymentStatus(String paymentstatus){
+    public List<Member> findByPaymentStatus(PaymentStatus paymentstatus){
         return memberRepository.findByPaymentStatus(paymentstatus);
     }
 
