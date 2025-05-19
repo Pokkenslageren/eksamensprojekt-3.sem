@@ -35,10 +35,25 @@ public class SessionExercise {
     private Integer orderNum;
 
     @Column(name = "notes")
-    @NotBlank(message = "Noter skal udfyldes")
     private String notes;
 
-    protected SessionExercise() {}
+    public SessionExercise() {}
+
+    public SessionExercise(Session session, Exercise exercise, Integer orderNum, String notes) {
+        this.session = session;
+        this.exercise = exercise;
+        this.orderNum = orderNum;
+        this.notes = notes;
+
+        //SETUP FOR Composite key!
+        this.id = new SessionExerciseId();
+        if (session != null && session.getSessionId() != null) {
+            this.id.setSessionId(session.getSessionId());
+        }
+        if (exercise != null && exercise.getExerciseId() != null) {
+            this.id.setExerciseId(exercise.getExerciseId());
+        }
+    }
 
     @Override
     public String toString() {

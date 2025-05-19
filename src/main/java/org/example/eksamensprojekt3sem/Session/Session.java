@@ -8,6 +8,7 @@ import org.example.eksamensprojekt3sem.SessionExercise.SessionExercise;
 import org.example.eksamensprojekt3sem.Team.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,10 +36,10 @@ public class Session {
     private String location;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
-    private List<SessionExercise> sessionExercises;
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<SessionExercise> sessionExercises = new ArrayList<>();
 
-    protected Session() {}
+    public Session() {}
 
     public Long getSessionId() {
         return sessionId;
