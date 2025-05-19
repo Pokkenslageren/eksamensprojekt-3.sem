@@ -54,6 +54,17 @@ public class MemberService {
         }
         return false;
     }
+    public List<Member> findByNameContainingIgnoreCase(String name){
+        return memberRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    public List<Member> findByEmailContainingIgnoreCase(String email){
+        return memberRepository.findByEmailContainingIgnoreCase(email);
+    }
+
+    public List<Member> findByPaymentStatus(String paymentstatus){
+        return memberRepository.findByPaymentStatus(paymentstatus);
+    }
 
     /*
     public List<MembershipModel> getMemberships(){

@@ -48,4 +48,17 @@ public class MemberController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/member/search/{name}")
+    public List<Member> findByNameContainingIgnoreCase(@RequestParam String name){
+        return memberService.findByNameContainingIgnoreCase(name);
+    }
+    @GetMapping("/member/search/{email}")
+    public List<Member> findByEmailContainingIgnoreCase(@RequestParam String email){
+        return memberService.findByEmailContainingIgnoreCase(email);
+    }
+
+    @GetMapping("/member/search/{paymentstatus}")
+    public List<Member> findByPaymentStatus(@RequestParam String paymentstatus){
+        return memberService.findByPaymentStatus(paymentstatus);
+    }
 }
