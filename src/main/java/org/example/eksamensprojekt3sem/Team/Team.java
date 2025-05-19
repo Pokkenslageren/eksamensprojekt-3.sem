@@ -21,10 +21,9 @@ public class Team {
     private String description;
 
     @Column(name = "active")
-    @NotBlank(message = "Aktivitetsstatus skal udfyldes")
     private boolean active;
 
-    protected Team() {
+    public Team() {
     }
 
     public Team(long teamId, String name, String description, boolean active) {

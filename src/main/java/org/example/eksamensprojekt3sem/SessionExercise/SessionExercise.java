@@ -1,5 +1,7 @@
 package org.example.eksamensprojekt3sem.SessionExercise;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.validation.constraints.Min;
@@ -10,19 +12,20 @@ import org.example.eksamensprojekt3sem.Exercise.Exercise;
 
 @Entity
 @Table(name = "session_exercise")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class SessionExercise {
 
     @EmbeddedId
     private SessionExerciseId id = new SessionExerciseId();
 
-    @JsonBackReference
     @NotNull(message = "Session skal udfyldes")
     @ManyToOne
     @MapsId("sessionId")
     @JoinColumn(name = "session_id")
     private Session session;
 
-    @JsonBackReference
     @NotNull(message = "Øvelse skal udfyldes")
     @ManyToOne
     @MapsId("exerciseId")

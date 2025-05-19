@@ -1,189 +1,220 @@
 package org.example.eksamensprojekt3sem.config;
 
 import jakarta.annotation.PostConstruct;
-import org.apache.catalina.Session;
-import org.apache.catalina.User;
-import org.example.eksamensprojekt3sem.*;
 import org.example.eksamensprojekt3sem.Enums.MembershipType;
 import org.example.eksamensprojekt3sem.Enums.PaymentStatus;
 import org.example.eksamensprojekt3sem.Enums.UserRole;
 import org.example.eksamensprojekt3sem.Exercise.Exercise;
+import org.example.eksamensprojekt3sem.Exercise.ExerciseRepository;
+import org.example.eksamensprojekt3sem.Member.Member;
+import org.example.eksamensprojekt3sem.Member.MemberRepository;
 import org.example.eksamensprojekt3sem.Membership.Membership;
+import org.example.eksamensprojekt3sem.Membership.MembershipRepository;
+import org.example.eksamensprojekt3sem.Session.Session;
+import org.example.eksamensprojekt3sem.Session.SessionRepository;
 import org.example.eksamensprojekt3sem.SessionExercise.SessionExercise;
+import org.example.eksamensprojekt3sem.SessionExercise.SessionExerciseId;
+import org.example.eksamensprojekt3sem.SessionExercise.SessionExerciseRepository;
 import org.example.eksamensprojekt3sem.Team.Team;
+import org.example.eksamensprojekt3sem.Team.TeamRepository;
+import org.example.eksamensprojekt3sem.User.User;
+import org.example.eksamensprojekt3sem.User.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-
-import java.lang.reflect.Member;
-import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
+import java.util.Date;
 
 @Component
 @Profile("dev")
 public class DataInitializer {
-    /*
+    private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final TeamRepository teamRepository;
+    private final ExerciseRepository exerciseRepository;
+    private final SessionRepository sessionRepository;
+    private final SessionExerciseRepository sessionExerciseRepository;
+    private final MemberRepository memberRepository;
+    private final MembershipRepository membershipRepository;
+    private final UserRepository userRepository;
 
-    private final PasswordEncoder passwordEncoder;
-
-    public DataInitializer(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
+    @Autowired
+    public DataInitializer(TeamRepository teamRepository,
+                           ExerciseRepository exerciseRepository,
+                           SessionRepository sessionRepository,
+                           SessionExerciseRepository sessionExerciseRepository,
+                           MemberRepository memberRepository,
+                           MembershipRepository membershipRepository,
+                           UserRepository userRepository) {
+        this.teamRepository = teamRepository;
+        this.exerciseRepository = exerciseRepository;
+        this.sessionRepository = sessionRepository;
+        this.sessionExerciseRepository = sessionExerciseRepository;
+        this.memberRepository = memberRepository;
+        this.membershipRepository = membershipRepository;
+        this.userRepository = userRepository;
     }
 
     @PostConstruct
     @Transactional
     public void initData() {
-        // Create users (admin, chairman, trainers)
-        /*
-        User admin = new User(101L, "admin", passwordEncoder.encode("admin123"), UserRole.ADMIN);
-        User chairman = new User("chairman", passwordEncoder.encode("chairman123"), UserRole.CHAIRMAN);
-        User trainer1 = new User("trainer1", passwordEncoder.encode("trainer123"), UserRole.TRAINER);
-        User trainer2 = new User("trainer2", passwordEncoder.encode("trainer123"), UserRole.TRAINER);
+        logger.info("Starting data initialization...");
 
-        entityManager.persist(admin);
-        entityManager.persist(chairman);
-        entityManager.persist(trainer1);
-        entityManager.persist(trainer2);
+        try {
+            // Check if data already exists
+            if (teamRepository.count() > 0) {
+                logger.info("Data already initialized, skipping...");
+                return;
+            }
 
-        // Create teams
-        Team seniorTeam = new Team( 111L, "Senior hold", "Seniorhold for spillere over 18 år", true);
-        Team youthTeam = new Team(222L, "Ungdomshold", "Ungdomshold for spillere under 18 år", true);
+            // Create team (just one as per requirement)
+            Team team = new Team();
+            team.setName("Farum Cats");
+            team.setDescription("Australsk fodboldklub i Farum");
+            team.setActive(true);
 
-        entityManager.persist(seniorTeam);
-        entityManager.persist(youthTeam);
+            team = teamRepository.save(team);
+            logger.info("Team created: {}", team.getName());
 
-        // Create members and assign to teams
-        Member member1 = new Member("Anders Jensen", "anders@example.com", "Farum Hovedgade 10", LocalDate.of(1990, 5, 15), true);
-        member1.setTeam(seniorTeam);
-        member1.setTeamJoinDate(LocalDate.of(2023, 3, 1));
+            // Create users
+            User admin = new User();
+            admin.setUsername("admin");
+            admin.setPassword("admin"); // admin123
+            admin.setUserRole(UserRole.ADMIN);
 
-        Member member2 = new Member("Marie Nielsen", "marie@example.com", "Stavnsholtvej 25", LocalDate.of(2008, 8, 22), true);
-        member2.setTeam(youthTeam);
-        member2.setTeamJoinDate(LocalDate.of(2022, 9, 1));
+            User chairman = new User();
+            chairman.setUsername("chairman");
+            chairman.setPassword("chairman"); // admin123
+            chairman.setUserRole(UserRole.CHAIRMAN);
 
-        Member member3 = new Member("Peter Sørensen", "peter@example.com", "Ganløsevej 45", LocalDate.of(1985, 12, 3), true);
-        member3.setTeam(seniorTeam);
-        member3.setTeamJoinDate(LocalDate.of(2021, 8, 15));
+            User trainer = new User();
+            trainer.setUsername("trainer");
+            trainer.setPassword("trainer"); // admin123
+            trainer.setUserRole(UserRole.TRAINER);
 
-        Member member4 = new Member("Sofie Andersen", "sofie@example.com", "Paltholmvej 12", LocalDate.of(2010, 4, 17), true);
-        member4.setTeam(youthTeam);
-        member4.setTeamJoinDate(LocalDate.of(2023, 1, 10));
+            userRepository.save(admin);
+            userRepository.save(chairman);
+            userRepository.save(trainer);
+            logger.info("Users created");
 
-        Member member5 = new Member("Jens Hansen", "jens@example.com", "Farumvej 78", LocalDate.of(1988, 2, 28), true);
-        member5.setTeam(seniorTeam);
-        member5.setTeamJoinDate(LocalDate.of(2022, 5, 5));
+            // Create some members
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        Member member6 = new Member("Mette Pedersen", "mette@example.com", "Frederiksborgvej 102", LocalDate.of(1975, 7, 9), false);
-        // Passive member, no team
+            Member member1 = createMember("Anders Jensen", "anders@example.com", "12345678", "Farum Hovedgade 10", sdf.parse("1990-05-15"), PaymentStatus.PAID);
+            Member member2 = createMember("Marie Nielsen", "marie@example.com", "23456789", "Stavnsholtvej 25", sdf.parse("1995-08-22"), PaymentStatus.PAID);
+            Member member3 = createMember("Peter Sørensen", "peter@example.com", "34567890", "Ganløsevej 45", sdf.parse("1985-12-03"), PaymentStatus.UNPAID);
+            Member member4 = createMember("Sofie Andersen", "sofie@example.com", "45678901", "Paltholmvej 12", sdf.parse("1992-04-17"), PaymentStatus.PAID);
+            Member member5 = createMember("Jens Hansen", "jens@example.com", "56789012", "Farumvej 78", sdf.parse("1988-02-28"), PaymentStatus.PARTIALLY_PAID);
 
-        entityManager.persist(member1);
-        entityManager.persist(member2);
-        entityManager.persist(member3);
-        entityManager.persist(member4);
-        entityManager.persist(member5);
-        entityManager.persist(member6);
+            logger.info("Members created");
 
-        // Create memberships
-        Membership membership1 = new Membership(1L, MembershipType.SENIOR, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31), List.of());
-        membership1.setEndDate(LocalDate.of(2023, 12, 31));
+            // Create memberships
+            createMembership(member1.getMemberId(), MembershipType.SENIOR);
+            createMembership(member2.getMemberId(), MembershipType.SENIOR);
+            createMembership(member3.getMemberId(), MembershipType.SENIOR);
+            createMembership(member4.getMemberId(), MembershipType.JUNIOR);
+            createMembership(member5.getMemberId(), MembershipType.PASSIVE);
 
-        Membership membership2 = new Membership(2L, MembershipType.JUNIOR, LocalDate.of(2022, 8, 1), LocalDate.of(2023, 7, 31), List.of());
-        membership2.setEndDate(LocalDate.of(2023, 7, 31));
+            logger.info("Memberships created");
 
-        Membership membership3 = new Membership(3L, MembershipType.SENIOR, LocalDate.of(2021, 1, 1), LocalDate.of(2023, 12, 31), List.of());
-        membership3.setEndDate(LocalDate.of(2023, 12, 31));
+            // Create exercises
+            Exercise exercise1 = createExercise("Opvarmning", "Grundig opvarmning med fokus på bevægelighed", 10);
+            Exercise exercise2 = createExercise("5 Star Handball", "Australsk fodbold-inspireret håndboldøvelse", 15);
+            Exercise exercise3 = createExercise("Kicking Practice", "Øvelser til at forbedre spark-teknik", 20);
+            Exercise exercise4 = createExercise("Marking Drills", "Øvelser til at forbedre gribeteknik", 15);
+            Exercise exercise5 = createExercise("Tackling Technique", "Sikker tackling-teknik øvelser", 15);
+            Exercise exercise6 = createExercise("Match Simulation", "Spil med fokus på specifikke spilsituationer", 30);
+            Exercise exercise7 = createExercise("Cooldown", "Nedkøling og stræk", 10);
 
-        Membership membership4 = new Membership(4L, MembershipType.JUNIOR, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31), List.of());
-        membership4.setEndDate(LocalDate.of(2023, 12, 31));
+            logger.info("Exercises created");
 
-        Membership membership5 = new Membership(5L, MembershipType.SENIOR, LocalDate.of(2022, 1, 1), LocalDate.of(2023, 12, 31), List.of());
-        membership5.setEndDate(LocalDate.of(2022, 12, 31));
+            // Create one past session and one future session
+            LocalDateTime pastDate = LocalDateTime.now().minusDays(7).with(LocalTime.of(18, 0));
+            Session pastSession = createSession(team, pastDate, "Farum Park");
 
-        Membership membership6 = new Membership(6L, MembershipType.PASSIVE, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31), List.of());
-        membership6.setEndDate(LocalDate.of(2023, 12, 31));
+            LocalDateTime futureDate = LocalDateTime.now().plusDays(3).with(LocalTime.of(18, 0));
+            Session futureSession = createSession(team, futureDate, "Farum Park");
 
-        entityManager.persist(membership1);
-        entityManager.persist(membership2);
-        entityManager.persist(membership3);
-        entityManager.persist(membership4);
-        entityManager.persist(membership5);
-        entityManager.persist(membership6);
+            logger.info("Sessions created");
 
-        // Create exercises
-        Exercise exercise1 = new Exercise("Warmup", "Grundig opvarmning med fokus på bevægelighed", 10);
-        Exercise exercise2 = new Exercise("5 Star Handball", "Australsk fodbold-inspireret håndboldøvelse", 15);
-        Exercise exercise3 = new Exercise("Kicking Practice", "Øvelser til at forbedre spark-teknik", 20);
-        Exercise exercise4 = new Exercise("Marking Drills", "Øvelser til at forbedre gribeteknik", 15);
-        Exercise exercise5 = new Exercise("Tackling Technique", "Sikker tackling-teknik øvelser", 15);
-        Exercise exercise6 = new Exercise("Match Simulation", "Spil med fokus på specifikke spilsituationer", 30);
-        Exercise exercise7 = new Exercise("Cooldown", "Nedkøling og stræk", 10);
+            // Add exercises to past session
+            addExerciseToSession(pastSession, exercise1, 1, "Standard opvarmning");
+            addExerciseToSession(pastSession, exercise2, 2, "Del holdet i to lige store grupper");
+            addExerciseToSession(pastSession, exercise3, 3, "Fokus på teknik frem for kraft");
+            addExerciseToSession(pastSession, exercise7, 4, "Grundig udstrækning");
 
-        entityManager.persist(exercise1);
-        entityManager.persist(exercise2);
-        entityManager.persist(exercise3);
-        entityManager.persist(exercise4);
-        entityManager.persist(exercise5);
-        entityManager.persist(exercise6);
-        entityManager.persist(exercise7);
+            // Add exercises to future session
+            addExerciseToSession(futureSession, exercise1, 1, "Hurtig opvarmning");
+            addExerciseToSession(futureSession, exercise4, 2, "Fokus på timing");
+            addExerciseToSession(futureSession, exercise5, 3, "Sikkerhed er vigtig");
+            addExerciseToSession(futureSession, exercise6, 4, "Fuld bane");
+            addExerciseToSession(futureSession, exercise7, 5, "Kort nedkøling");
 
-        // Create training sessions
-        LocalDate nextTuesday = LocalDate.now().plusDays((9 - LocalDate.now().getDayOfWeek().getValue()) % 7 + 1);
-        LocalDate nextThursday = LocalDate.now().plusDays((11 - LocalDate.now().getDayOfWeek().getValue()) % 7 + 1);
+            logger.info("Session exercises added");
 
-        Session session1 = new Session(
-                seniorTeam,
-                LocalDateTime.of(nextTuesday, LocalTime.of(18, 0)),
-                "Farum Park",
-                "Tekniktræning for seniorhold",
-                "Fokus på grundlæggende teknikker og holdspil",
-                trainer1
-        );
+            logger.info("Data initialization completed successfully");
 
-        Session session2 = new Session(
-                youthTeam,
-                LocalDateTime.of(nextThursday, LocalTime.of(17, 0)),
-                "Farum Park",
-                "Ungdomstræning",
-                "Fokus på sjov og grundlæggende færdigheder",
-                trainer2
-        );
-
-        entityManager.persist(session1);
-        entityManager.persist(session2);
-
-        // Create session exercises
-        SessionExercise se1 = new SessionExercise(session1, exercise1, 1, "Start med lette løbeøvelser");
-        SessionExercise se2 = new SessionExercise(session1, exercise2, 2, "Del holdet i to grupper");
-        SessionExercise se3 = new SessionExercise(session1, exercise3, 3, "Fokus på drop punt teknik");
-        SessionExercise se4 = new SessionExercise(session1, exercise6, 4, "Småspil 6v6");
-        SessionExercise se5 = new SessionExercise(session1, exercise7, 5, "Grundig udstrækning");
-
-        SessionExercise se6 = new SessionExercise(session2, exercise1, 1, "Sjove opvarmningslege");
-        SessionExercise se7 = new SessionExercise(session2, exercise4, 2, "Parvis øvelse");
-        SessionExercise se8 = new SessionExercise(session2, exercise3, 3, "Grundlæggende spark-teknik");
-        SessionExercise se9 = new SessionExercise(session2, exercise7, 4, "Udstrækning i cirkel");
-
-        entityManager.persist(se1);
-        entityManager.persist(se2);
-        entityManager.persist(se3);
-        entityManager.persist(se4);
-        entityManager.persist(se5);
-        entityManager.persist(se6);
-        entityManager.persist(se7);
-        entityManager.persist(se8);
-        entityManager.persist(se9);
-
+        } catch (Exception e) {
+            logger.error("Error during data initialization", e);
+        }
     }
-      */
+
+    private Member createMember(String name, String email, String phone, String address, Date dateOfBirth, PaymentStatus paymentStatus) {
+        Member member = new Member();
+        member.setName(name);
+        member.setEmail(email);
+        member.setPhone(phone);
+        member.setAddress(address);
+        member.setDateOfBirth(dateOfBirth);
+        member.setPaymentStatus(paymentStatus);
+        return memberRepository.save(member);
+    }
+
+    private Membership createMembership(Long memberId, MembershipType type) {
+        Membership membership = new Membership();
+        membership.setMemberId(memberId);
+        membership.setMembershipType(type);
+        membership.setStartDate(LocalDate.now().minusMonths(2));
+        membership.setEndDate(LocalDate.now().plusMonths(10));
+        return membershipRepository.save(membership);
+    }
+
+    private Exercise createExercise(String name, String description, int duration) {
+        Exercise exercise = new Exercise();
+        exercise.setName(name);
+        exercise.setDescription(description);
+        exercise.setDuration(duration);
+        return exerciseRepository.save(exercise);
+    }
+
+    private Session createSession(Team team, LocalDateTime dateTime, String location) {
+        Session session = new Session();
+        session.setTeam(team);
+        session.setDateTime(dateTime);
+        session.setLocation(location);
+        return sessionRepository.save(session);
+    }
+
+    private void addExerciseToSession(Session session, Exercise exercise, int orderNum, String notes) {
+        SessionExercise sessionExercise = new SessionExercise();
+        sessionExercise.setSession(session);
+        sessionExercise.setExercise(exercise);
+        sessionExercise.setOrderNum(orderNum);
+        sessionExercise.setNotes(notes);
+
+        SessionExerciseId id = new SessionExerciseId();
+        id.setSessionId(session.getSessionId());
+        id.setExerciseId(exercise.getExerciseId());
+        sessionExercise.setId(id);
+
+        sessionExerciseRepository.save(sessionExercise);
+    }
 }

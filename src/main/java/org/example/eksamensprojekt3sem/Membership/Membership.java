@@ -20,7 +20,7 @@ public class Membership {
     private Long membershipId;
 
     @JoinColumn (name = "member_id")
-    @NotBlank(message = "Medlems-ID skal udfyldes")
+    @NotNull(message = "Medlems-ID skal udfyldes")
     private Long memberId;
 
     @Column(name = "membership_type")
@@ -38,7 +38,7 @@ public class Membership {
 
 
 
-    protected Membership() {}
+    public Membership() {}
 
     public Membership(Long memberId, MembershipType membershipType, LocalDate startDate, LocalDate endDate) {
         this.memberId = memberId;

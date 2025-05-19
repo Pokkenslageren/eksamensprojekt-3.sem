@@ -5,7 +5,6 @@ import org.example.eksamensprojekt3sem.Exercise.ExerciseRepository;
 import org.example.eksamensprojekt3sem.SessionExercise.SessionExercise;
 import org.example.eksamensprojekt3sem.SessionExercise.SessionExerciseId;
 import org.example.eksamensprojekt3sem.SessionExercise.SessionExerciseRepository;
-import org.example.eksamensprojekt3sem.Team.Team;
 import org.example.eksamensprojekt3sem.Team.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,110 +43,89 @@ public class SessionService {
 
     @Transactional
     public Session createSession(Session session, List<SessionExerciseDTO> exerciseDTOs) {
-        // Verify team exists if provided
-        if (session.getTeam() != null && session.getTeam().getTeamId() != 0) {
-            Team team = teamRepository.findById(session.getTeam().getTeamId())
-                    .orElseThrow(() -> new RuntimeException("Team not found with id: " + session.getTeam().getTeamId()));
-            session.setTeam(team);
-        }
-
-        // Save the session first to get an ID
+        // First persist the session to get an ID
         Session savedSession = sessionRepository.save(session);
 
-        // Now create and save session exercises
         if (exerciseDTOs != null && !exerciseDTOs.isEmpty()) {
-            List<SessionExercise> sessionExercises = new ArrayList<>();
-
             for (SessionExerciseDTO dto : exerciseDTOs) {
                 Exercise exercise = exerciseRepository.findById(dto.getExerciseId())
                         .orElseThrow(() -> new RuntimeException("Exercise not found with id: " + dto.getExerciseId()));
 
-                SessionExercise sessionExercise = new SessionExercise(
-                        savedSession,
-                        exercise,
-                        dto.getOrderNum(),
-                        dto.getNotes()
-                );
+                SessionExercise sessionExercise = new SessionExercise();
 
-                // Set the composite key
-                SessionExerciseId id = new SessionExerciseId();
-                id.setSessionId(savedSession.getSessionId());
-                id.setExerciseId(exercise.getExerciseId());
-                sessionExercise.setId(id);
+                sessionExercise.setSession(savedSession);
+                sessionExercise.setExercise(exercise);
+                sessionExercise.setOrderNum(dto.getOrderNum());
+                sessionExercise.setNotes(dto.getNotes());
+
+                SessionExerciseId compositeId = new SessionExerciseId();
+                compositeId.setSessionId(savedSession.getSessionId());
+                compositeId.setExerciseId(exercise.getExerciseId());
+                sessionExercise.setId(compositeId);
 
                 sessionExerciseRepository.save(sessionExercise);
-                sessionExercises.add(sessionExercise);
             }
-
-            savedSession.setSessionExercises(sessionExercises);
         }
 
-        return savedSession;
+        return sessionRepository.findById(savedSession.getSessionId())
+                .orElseThrow(() -> new RuntimeException("Failed to retrieve created session"));
     }
 
     @Transactional
-    public Session updateSession(Long id, Session sessionDetails, List<SessionExerciseDTO> exerciseDTOs) {
-        Session session = sessionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Session not found with id: " + id));
+    public Session updateSession(Long sessionId, Session updatedSession, List<SessionExerciseDTO> exerciseDTOs) {
 
-        // Update session details
-        session.setDateTime(sessionDetails.getDateTime());
-        session.setLocation(sessionDetails.getLocation());
+        Session existingSession = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found with id: " + sessionId));
 
+        existingSession.setDateTime(updatedSession.getDateTime());
+        existingSession.setLocation(updatedSession.getLocation());
+        existingSession.setTeam(updatedSession.getTeam());
 
-        Session updatedSession = sessionRepository.save(session);
+        Session savedSession = sessionRepository.save(existingSession);
 
-        if (updatedSession.getSessionExercises() != null) {
-            sessionExerciseRepository.deleteAll(updatedSession.getSessionExercises());
+        if (savedSession.getSessionExercises() != null && !savedSession.getSessionExercises().isEmpty()) {
+            sessionExerciseRepository.deleteAll(savedSession.getSessionExercises());
+            savedSession.getSessionExercises().clear();
         }
 
         if (exerciseDTOs != null && !exerciseDTOs.isEmpty()) {
-            List<SessionExercise> sessionExercises = new ArrayList<>();
-
             for (SessionExerciseDTO dto : exerciseDTOs) {
                 Exercise exercise = exerciseRepository.findById(dto.getExerciseId())
                         .orElseThrow(() -> new RuntimeException("Exercise not found with id: " + dto.getExerciseId()));
 
-                SessionExercise sessionExercise = new SessionExercise(
-                        updatedSession,
-                        exercise,
-                        dto.getOrderNum(),
-                        dto.getNotes()
-                );
 
-                SessionExerciseId id2 = new SessionExerciseId();
-                id2.setSessionId(updatedSession.getSessionId());
-                id2.setExerciseId(exercise.getExerciseId());
-                sessionExercise.setId(id2);
+                SessionExercise sessionExercise = new SessionExercise();
 
+                sessionExercise.setSession(savedSession);
+                sessionExercise.setExercise(exercise);
+                sessionExercise.setOrderNum(dto.getOrderNum());
+                sessionExercise.setNotes(dto.getNotes());
+
+                // Create the composite ID
+                SessionExerciseId compositeId = new SessionExerciseId();
+                compositeId.setSessionId(savedSession.getSessionId());
+                compositeId.setExerciseId(exercise.getExerciseId());
+                sessionExercise.setId(compositeId);
                 sessionExerciseRepository.save(sessionExercise);
-                sessionExercises.add(sessionExercise);
             }
-
-            updatedSession.setSessionExercises(sessionExercises);
         }
-
-        return updatedSession;
+        return sessionRepository.findById(savedSession.getSessionId())
+                .orElseThrow(() -> new RuntimeException("Failed to retrieve updated session"));
     }
 
     @Transactional
     public void deleteSession(Long id) {
-        Optional<Session> sessionOptional = sessionRepository.findById(id);
-        if (sessionOptional.isPresent()) {
-            Session session = sessionOptional.get();
+        Session session = sessionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Session not found with id: " + id));
 
-            // Delete all associated exercises first
-            if (session.getSessionExercises() != null) {
-                sessionExerciseRepository.deleteAll(session.getSessionExercises());
-            }
-
-            sessionRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Session not found with id: " + id);
+        if (session.getSessionExercises() != null && !session.getSessionExercises().isEmpty()) {
+            sessionExerciseRepository.deleteAll(session.getSessionExercises());
         }
+
+        sessionRepository.delete(session);
     }
 
-    // DTO for session exercises
+    // DTO class for session exercises
     public static class SessionExerciseDTO {
         private Long exerciseId;
         private Integer orderNum;
