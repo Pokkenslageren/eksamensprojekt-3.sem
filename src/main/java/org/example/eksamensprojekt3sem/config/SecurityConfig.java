@@ -1,32 +1,38 @@
 package org.example.eksamensprojekt3sem.config;
-/*
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-
-import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
-    //overrider spring security, så vi kan tilgå h2 med standard credentials
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/h2-console/**", "/api/**").permitAll() // Allow H2 console and API
-                        .anyRequest().authenticated()
-                )
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**", "/api/**") // Disable CSRF for H2 console and API
+                .csrf(AbstractHttpConfigurer::disable)  // Disable CSRF for simplicity during development
+                .authorizeHttpRequests(auth -> auth
+                        // Allow access to static resources
+                        .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/*.js", "/*.css", "/images/**").permitAll()
+                        // Allow access to H2 console
+                        .requestMatchers("/h2-console/**").permitAll()
+                        // Allow access to API endpoints
+                        .requestMatchers("/fodboldklub/**").permitAll()
+                        // Any other request requires authentication
+                        .anyRequest().permitAll()  // Change to authenticated() when you implement authentication
                 )
                 .headers(headers -> headers
-                        .frameOptions().sameOrigin() // Allow frames for H2 console
+                        .frameOptions().sameOrigin()  // Allow frames for H2 console
                 )
-                .formLogin(withDefaults()); // or .httpBasic();
+                // Disable form login and HTTP Basic for now
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
 }
-*/
