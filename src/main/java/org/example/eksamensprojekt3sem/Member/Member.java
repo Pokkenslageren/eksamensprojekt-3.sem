@@ -36,6 +36,7 @@ public class Member {
     @NotNull(message = "Dato skal udfyldes")
     private Date dateOfBirth;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_status")
     @NotNull(message = "Betalingstatus skal udfyldes")
     private PaymentStatus paymentStatus;

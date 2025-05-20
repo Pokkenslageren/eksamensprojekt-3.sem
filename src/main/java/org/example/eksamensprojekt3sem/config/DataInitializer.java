@@ -217,4 +217,6 @@ public class DataInitializer {
 
         sessionExerciseRepository.save(sessionExercise);
     }
+
 }
+
