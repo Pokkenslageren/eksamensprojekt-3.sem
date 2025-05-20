@@ -5,6 +5,7 @@ import org.example.eksamensprojekt3sem.Enums.PaymentStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLOutput;
 import java.util.List;
 
 @RestController
@@ -14,6 +15,7 @@ public class MemberController {
     private final MemberService memberService;
 
     public MemberController(MemberService memberService) {
+        System.out.println("MemberController");
         this.memberService = memberService;
     }
 
@@ -50,6 +52,20 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/member/search/name")
+    public List<Member> findByNameContainingIgnoreCase(@RequestParam String name){
+        return memberService.findByNameContainingIgnoreCase(name);
+    }
+    @GetMapping("/member/search/email")
+    public List<Member> findByEmailContainingIgnoreCase(@RequestParam String email){
+        return memberService.findByEmailContainingIgnoreCase(email);
+    }
+
+    @GetMapping("/member/search/paymentstatus")
+    public List<Member> findByPaymentStatus(@RequestParam PaymentStatus paymentstatus){
+        return memberService.findByPaymentStatus(paymentstatus);
+    }
+  
     @PutMapping("/members/{id}/payment-status")
     public ResponseEntity<Member> updatePaymentStatus(
             @PathVariable long id,
@@ -64,5 +80,4 @@ public class MemberController {
             return ResponseEntity.badRequest().build();
         }
     }
-
 }
