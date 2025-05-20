@@ -1,5 +1,7 @@
 package org.example.eksamensprojekt3sem.Session;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -8,10 +10,14 @@ import org.example.eksamensprojekt3sem.SessionExercise.SessionExercise;
 import org.example.eksamensprojekt3sem.Team.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "session")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "sessionId")
 public class Session {
 
     @Id
@@ -26,7 +32,6 @@ public class Session {
     private Team team;
 
     @NotNull(message = "Sessionsdato skal udfyldes")
-    @Future(message = "Sessionsdato skal være i fremtiden")
     @Column(name = "date_time")
     private LocalDateTime dateTime;
 
@@ -35,10 +40,10 @@ public class Session {
     private String location;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
-    private List<SessionExercise> sessionExercises;
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<SessionExercise> sessionExercises = new ArrayList<>();
 
-    protected Session() {}
+    public Session() {}
 
     public Long getSessionId() {
         return sessionId;

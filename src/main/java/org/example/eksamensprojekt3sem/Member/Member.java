@@ -41,7 +41,7 @@ public class Member {
     @NotNull(message = "Betalingstatus skal udfyldes")
     private PaymentStatus paymentStatus;
 
-    protected Member() {
+    public Member() {
     }
 
     public Member(String name, long memberId, String email, String phone, String address, Date dateOfBirth, PaymentStatus paymentStatus) {
