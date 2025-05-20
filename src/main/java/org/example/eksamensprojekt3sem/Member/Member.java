@@ -33,14 +33,15 @@ public class Member {
     private String address;
 
     @Column(name = "date_of_birth")
-    @NotBlank(message = "Dato skal udfyldes")
+    @NotNull(message = "Dato skal udfyldes")
     private Date dateOfBirth;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_status")
     @NotNull(message = "Betalingstatus skal udfyldes")
     private PaymentStatus paymentStatus;
 
-    protected Member() {
+    public Member() {
     }
 
     public Member(String name, long memberId, String email, String phone, String address, Date dateOfBirth, PaymentStatus paymentStatus) {

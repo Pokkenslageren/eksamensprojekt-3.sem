@@ -27,7 +27,7 @@ public class User {
     @NotNull(message = "Rolle skal udfyldes")
     private UserRole userRole;
 
-    protected User() {
+    public User() {
     }
 
     public User(long userId, String username, String password, UserRole userRole) {

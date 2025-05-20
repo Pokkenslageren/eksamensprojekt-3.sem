@@ -1,7 +1,11 @@
 package org.example.eksamensprojekt3sem.Exercise;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.example.eksamensprojekt3sem.SessionExercise.SessionExercise;
@@ -10,6 +14,10 @@ import java.util.*;
 
 @Entity
 @Table(name = "exercises")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "exerciseId")
+@JsonIgnoreProperties({"sessionExercises"})
 public class Exercise {
 
     @Id
@@ -27,7 +35,7 @@ public class Exercise {
 
     @Column(name = "duration")
     @PositiveOrZero
-    @NotBlank(message = "Varighed skal udfyldes")
+    @NotNull(message = "Varighed skal udfyldes")
     private int duration;
 
     @OneToMany(mappedBy = "exercise")
