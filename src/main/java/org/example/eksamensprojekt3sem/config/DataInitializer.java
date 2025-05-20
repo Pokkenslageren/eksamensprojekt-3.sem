@@ -13,7 +13,7 @@ import org.example.eksamensprojekt3sem.SessionExercise.SessionExercise;
 import org.example.eksamensprojekt3sem.Team.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
