@@ -9,7 +9,7 @@ import java.sql.SQLOutput;
 import java.util.List;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/fodboldklub/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -19,31 +19,31 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/api/members")
+    @GetMapping
     public List getAllMembers() {
         return memberService.getAllMembers();
     }
 
-    @GetMapping("/api/members/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Member> getMemberById(@PathVariable long id) {
         return memberService.getMemberById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/api/members/add")
+    @PostMapping
     public Member createMember(@Valid @RequestBody Member member) {
         return memberService.addMember(member);
     }
 
-    @PutMapping("/api/members/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Member> updateMember(@PathVariable long id, @Valid @RequestBody Member memberDetails) {
         return memberService.updateMember(id, memberDetails)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/api/members/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Member> deleteMember(@PathVariable long id) {
         if (memberService.deleteMember(id)) {
             return ResponseEntity.noContent().build();
@@ -66,7 +66,7 @@ public class MemberController {
         return memberService.findByPaymentStatus(paymentstatus);
     }
   
-    @PutMapping("/members/{id}/payment-status")
+    @PutMapping("/{id}/payment-status")
     public ResponseEntity<Member> updatePaymentStatus(
             @PathVariable long id,
             @RequestBody PaymentStatusDTO request
