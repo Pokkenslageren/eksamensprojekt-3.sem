@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("fodboldklub/teams")
 public class TeamController {
 
     private final TeamService teamService;
@@ -22,24 +22,24 @@ public class TeamController {
         this.teamRepository = teamRepository;
     }
 
-    @GetMapping("/teams")
+    @GetMapping
     public List<Team> getAllTeams() {
         return teamService.getAllTeams();
     }
 
-    @PostMapping("/teams/add")
+    @PostMapping
     public Member addMemberToTeam(@Valid @RequestBody Member member) {
         return teamService.addMember(member);
     }
 
-    @PutMapping("/teams/update")
+    @PutMapping("/{id}")
     public ResponseEntity<Team> updateTeam(@PathVariable long id, @Valid @RequestBody Team teamDetails) {
         return teamService.updateTeam(id, teamDetails)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/teams/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Team> deleteTeam(@PathVariable long id) {
         if (teamService.deleteTeam(id)) {
             return ResponseEntity.noContent().build();
